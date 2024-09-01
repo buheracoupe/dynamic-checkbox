@@ -1,31 +1,20 @@
-const checkboxElements = document.querySelectorAll("input[type='checkbox']");
-const isShiftKeyPressed = false;//flag to check if the shiftkey is pressed, could not directly use eventListeners
-const checkboxObjects = [];
+const checkboxes = document.querySelectorAll("input[type='checkbox']");
+let lastChecked;
 
+checkboxes.forEach((checkbox) => checkbox.addEventListener("click", handleCheck));
 
-checkboxElements.forEach((checkbox) => {
-    const checkboxObject = {
-        element: checkbox,
-        isChecked: checkbox.checked
-    }
+function handleCheck(event) {
+  let inBetween = false;
+  if (event.shiftKey && this.checked) { // Checks if Shift is pressed and checkbox is checked
+    checkboxes.forEach((checkbox) => {
+      if (checkbox === this || checkbox === lastChecked) {
+        inBetween = !inBetween;
+      }
+      if (inBetween) {
+        checkbox.checked = true;
+      }
+    });
+  }
+  lastChecked = this;
+}
 
-    checkboxObject.toggleChecked = () => {
-        checkboxObject.isChecked = !checkboxObject.isChecked;
-    }
-    checkbox.addEventListener("change", checkboxObject.toggleChecked)
-
-    checkboxObjects.push(checkboxObject)
-})
-
-
-
- window.addEventListener("keydown", (event) => {
-    if(event.target === ""){
-        isShiftKeyPressed = true;
-    }
-})
- window.addEventListener("keyup", (event) => {
-    if(event.target === ""){
-        isShiftKeyPressed = false;
-    }
-})
